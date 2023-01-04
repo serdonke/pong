@@ -2,3 +2,6 @@
 *.o
 .vscode
 build
+compile_commands.json
+cmake-build
+.cache

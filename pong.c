@@ -6,6 +6,7 @@ typedef struct Paddle
 {
     Rectangle entity;
     Color color;
+    int score;
 } Paddle;
 
 typedef struct Ball
@@ -21,7 +22,7 @@ typedef struct Ball
 
 #define BALL_RADIUS 5
 #define BALL_SPEED  600
-#define BALL_OFFSET 400
+#define BALL_OFFSET 600
 
 int main(void)
 {
@@ -35,6 +36,7 @@ int main(void)
     playerPaddle.color = AIPaddle.color = RAYWHITE;
     playerPaddle.entity.height = AIPaddle.entity.height = PADDLE_HEIGHT;
     playerPaddle.entity.width  = AIPaddle.entity.width  = PADDLE_WIDTH;
+    playerPaddle.score = AIPaddle.score = 0;
     playerPaddle.entity.x = 20;
     playerPaddle.entity.y = GetRenderHeight() / 2;
     AIPaddle.entity.x = GetRenderWidth() - 40;
@@ -47,6 +49,10 @@ int main(void)
     ball.color  = RAYWHITE;
     int direction = GetRandomValue(-1, 1);
     float offset  = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);
+
+    //Score keeping
+    char *strplayerScore = MemAlloc(1024);
+    char *strAIScore = MemAlloc(1024);
 
     monitor = GetCurrentMonitor();
     printf("Monitor: %d\nHeight: %d\nWidth: %d\n",monitor, GetRenderHeight(), GetRenderWidth());
@@ -95,14 +101,28 @@ int main(void)
         if(CheckCollisionCircleRec(ball.position, ball.radius, ((ball.position.x <= width / 2) ? playerPaddle.entity : AIPaddle.entity)))
         {
             direction = ball.position.x <= width / 2 ? 0 : 1;
-            offset = GetRandomValue(-600, 600);
+            offset = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);
         }
+        //Tracks scores
+        if(CheckCollisionCircleRec(ball.position, ball.radius, playerPaddle.entity))
+        {
+            playerPaddle.score += 1;
+            sprintf(strplayerScore, "%d", playerPaddle.score);
+        }
+        if(CheckCollisionCircleRec(ball.position, ball.radius, AIPaddle.entity))
+        {
+            AIPaddle.score += 1;
+            sprintf(strAIScore, "%d", AIPaddle.score);
+        }
+
 
         BeginDrawing();
             ClearBackground(BLACK);
             DrawRectangleRec(playerPaddle.entity, playerPaddle.color);
             DrawRectangleRec(AIPaddle.entity, AIPaddle.color);
             DrawCircleV(ball.position, ball.radius, ball.color);
+            DrawText(strplayerScore, GetRenderWidth() / 2 - 200, GetRenderHeight() / 2 - 200, 30, RAYWHITE);
+            DrawText(strAIScore, GetRenderWidth() / 2 + 200, GetRenderHeight() / 2 - 200, 30, RAYWHITE);
         EndDrawing();
     }
     

@@ -6,8 +6,16 @@ function build() {
     gcc pong.c -o ./build/pong -Wall -I. -I../raylib/src -L. -L../raylib/src -lraylib -lGL -lc -lm -lpthread -ldl -lrt -lX11 && ./build/pong
 }
 
-if [ -d ./build ]; then
-    build
+if [ -f CMakeLists.txt ]; then
+    cmake -G "Unix Makefiles" -S . -B cmake-build
+    cmake --build cmake-build
+    if [ -x ./cmake-build/pong ]; then
+        ./cmake-build/pong
+    fi
 else
-    mkdir build && build
+    if [ -d ./build ]; then
+        build
+    else
+        mkdir build && build
+    fi
 fi
