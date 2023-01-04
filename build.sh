@@ -8,6 +8,7 @@ function build() {
 
 if [ -f CMakeLists.txt ]; then
     cmake -G "Unix Makefiles" -S . -B cmake-build
+    cp ./res ./cmake-build
     cmake --build cmake-build
     if [ -x ./cmake-build/pong ]; then
         ./cmake-build/pong
@@ -16,6 +17,6 @@ else
     if [ -d ./build ]; then
         build
     else
-        mkdir build && build
+        mkdir build && cp res build && build
     fi
 fi

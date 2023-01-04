@@ -1,1 +1,17 @@
 Pong clone....again...
+
+This repo sure has more build files than project files...
+
+Build on linux:
+
+The `build.sh` script can build with or without cmake.
+
+Without cmake it requires that raylib headers and static library files are stored at `../raylib/src`
+
+`./build.sh`
+
+Build on Windows:
+
+`make` builds for windows (requires `gcc` in PATH) and raylib headers and static library file are stored at `../raylib/src`
+
+The `build.bat` possibly works as well (not tested yet), it basically calls Cmake and takes care of building raylib as well

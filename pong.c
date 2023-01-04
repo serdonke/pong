@@ -30,13 +30,17 @@ int main(void)
     int height = 720;
     int width  = 1280;
 
+    Image icon = LoadImage("./res/icon.png");
+
     InitWindow(width, height, "Pong");
+
+    SetWindowIcon(icon);
 
     Paddle playerPaddle, AIPaddle;
     playerPaddle.color = AIPaddle.color = RAYWHITE;
+    playerPaddle.score = AIPaddle.score = 0;
     playerPaddle.entity.height = AIPaddle.entity.height = PADDLE_HEIGHT;
     playerPaddle.entity.width  = AIPaddle.entity.width  = PADDLE_WIDTH;
-    playerPaddle.score = AIPaddle.score = 0;
     playerPaddle.entity.x = 20;
     playerPaddle.entity.y = GetRenderHeight() / 2;
     AIPaddle.entity.x = GetRenderWidth() - 40;
@@ -53,12 +57,14 @@ int main(void)
     //Score keeping
     char *strplayerScore = MemAlloc(1024);
     char *strAIScore = MemAlloc(1024);
+    strplayerScore[0] = '0';
+    strAIScore[0] = '0';
 
     monitor = GetCurrentMonitor();
     printf("Monitor: %d\nHeight: %d\nWidth: %d\n",monitor, GetRenderHeight(), GetRenderWidth());
+    printf("%s\n", GetWorkingDirectory());
 
     SetTargetFPS(GetMonitorRefreshRate(monitor));
-
     while (!WindowShouldClose())
     {
         if(IsKeyDown(KEY_S) && playerPaddle.entity.y < GetRenderHeight() - PADDLE_HEIGHT)
@@ -103,7 +109,7 @@ int main(void)
             direction = ball.position.x <= width / 2 ? 0 : 1;
             offset = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);
         }
-        //Tracks scores
+        //Track scores
         if(CheckCollisionCircleRec(ball.position, ball.radius, playerPaddle.entity))
         {
             playerPaddle.score += 1;
@@ -126,5 +132,8 @@ int main(void)
         EndDrawing();
     }
     
+    UnloadImage(icon);
+    MemFree(strplayerScore);
+    MemFree(strAIScore);
     CloseWindow();
 }
