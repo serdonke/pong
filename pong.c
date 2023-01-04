@@ -31,8 +31,10 @@ int main(void)
     int width  = 1280;
 
     Image icon = LoadImage("./res/icon.png");
+    Sound impact = LoadSound("./res/sound.wav");
 
     InitWindow(width, height, "Pong");
+    InitAudioDevice();
 
     SetWindowIcon(icon);
 
@@ -106,6 +108,7 @@ int main(void)
         //Ball-player Interaction
         if(CheckCollisionCircleRec(ball.position, ball.radius, ((ball.position.x <= width / 2) ? playerPaddle.entity : AIPaddle.entity)))
         {
+            PlaySound(impact);
             direction = ball.position.x <= width / 2 ? 0 : 1;
             offset = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);
         }
@@ -135,5 +138,6 @@ int main(void)
     UnloadImage(icon);
     MemFree(strplayerScore);
     MemFree(strAIScore);
+    CloseAudioDevice();
     CloseWindow();
 }
