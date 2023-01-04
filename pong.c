@@ -77,16 +77,42 @@ int main(void)
         {
             playerPaddle.entity.y -= PADDLE_SPEED * GetFrameTime();
         }
-        //AIPAddle Test
-        if(IsKeyDown(KEY_DOWN) && AIPaddle.entity.y < GetRenderHeight() - PADDLE_HEIGHT)
+        // //AIPAddle Test
+        // if(IsKeyDown(KEY_DOWN) && AIPaddle.entity.y < GetRenderHeight() - PADDLE_HEIGHT)
+        // {
+        //     AIPaddle.entity.y += PADDLE_SPEED * GetFrameTime();
+        // }
+        // else if(IsKeyDown(KEY_UP) && AIPaddle.entity.y > 0)
+        // {
+        //     AIPaddle.entity.y -= PADDLE_SPEED * GetFrameTime();
+        // }
+        //AI Paddle
+        if(ball.position.x < GetRenderWidth() / 2.0)
         {
-            AIPaddle.entity.y += PADDLE_SPEED * GetFrameTime();
+            if (AIPaddle.entity.y > GetRenderHeight() / 2.0 - PADDLE_HEIGHT / 2)
+            {
+                AIPaddle.entity.y -= (PADDLE_SPEED * GetFrameTime());
+            }
+            else 
+            {
+                AIPaddle.entity.y += (PADDLE_SPEED * GetFrameTime());    
+            }
         }
-        else if(IsKeyDown(KEY_UP) && AIPaddle.entity.y > 0)
+        else
         {
-            AIPaddle.entity.y -= PADDLE_SPEED * GetFrameTime();
+            if (AIPaddle.entity.y != ball.position.y)
+            {
+                if (AIPaddle.entity.y > ball.position.y)
+                {
+                    AIPaddle.entity.y -= PADDLE_SPEED * GetFrameTime();
+                }
+                else
+                {
+                    if(AIPaddle.entity.y < GetRenderHeight() - PADDLE_HEIGHT)
+                        AIPaddle.entity.y += PADDLE_SPEED * GetFrameTime();
+                }
+            }
         }
-
 
         //Ball Movement
         ball.position.x += (BALL_SPEED * (direction ? -1 : 1)) * GetFrameTime();
