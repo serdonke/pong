@@ -121,7 +121,7 @@ int main(void)
                 //     AIPaddle.entity.y -= PADDLE_SPEED * GetFrameTime();
                 // }
                 //AI Paddle
-                if(ball.position.x < GetRenderWidth() / 2.0)
+                if(direction == 1)
                 {
                     if (AIPaddle.entity.y > GetRenderHeight() / 2.0 - PADDLE_HEIGHT / 2.0)
                     {
