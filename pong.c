@@ -31,12 +31,14 @@ int main(void)
     int width  = 1280;
 
     Image icon = LoadImage("./res/icon.png");
-    Sound impact = LoadSound("./res/sound.wav");
 
     InitWindow(width, height, "Pong");
-    InitAudioDevice();
-
     SetWindowIcon(icon);
+    
+    InitAudioDevice();
+    Sound impact  = LoadSound("./res/paddle_hit.wav");
+    Sound wallHit = LoadSound("./res/wall_hit.wav");
+    Sound score   = LoadSound("./res/score.wav");
 
     Paddle playerPaddle, AIPaddle;
     playerPaddle.color = AIPaddle.color = RAYWHITE;
@@ -98,7 +100,7 @@ int main(void)
                 AIPaddle.entity.y += (PADDLE_SPEED * GetFrameTime());    
             }
         }
-        else
+        else if (ball.position.x > GetRenderWidth() / 2.0)
         {
             if (AIPaddle.entity.y != ball.position.y)
             {
@@ -125,11 +127,13 @@ int main(void)
             ball.position.x = GetRenderWidth() / 2;
             ball.position.y = GetRenderHeight() / 2;
             direction = GetRandomValue(-1, 1);
-            offset = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);            
+            offset = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);
+            PlaySound(score);
         }
         if(ball.position.y <= 0 + ball.radius || ball.position.y >= GetRenderHeight() - ball.radius)
         {    
             offset *= -1;
+            PlaySound(wallHit);            
         }
         //Ball-player Interaction
         if(CheckCollisionCircleRec(ball.position, ball.radius, ((ball.position.x <= width / 2) ? playerPaddle.entity : AIPaddle.entity)))
@@ -137,6 +141,7 @@ int main(void)
             PlaySound(impact);
             direction = ball.position.x <= width / 2 ? 0 : 1;
             offset = GetRandomValue(-BALL_OFFSET, BALL_OFFSET);
+            PlaySound(impact);
         }
         //Track scores
         if(CheckCollisionCircleRec(ball.position, ball.radius, playerPaddle.entity))
